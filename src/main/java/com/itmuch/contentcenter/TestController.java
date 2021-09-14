@@ -37,8 +37,20 @@ public class TestController {
     }
     @Autowired
     private TestBaiduFeignClient testBaiduFeignClient;
+    @Autowired
+    private TestService testService;
     @GetMapping("baidu")
     public String baiduIndex(){
         return testBaiduFeignClient.index();
+    }
+    @GetMapping("/test-a")
+    public String testA(){
+        testService.common();
+        return "test-a";
+    }
+    @GetMapping("/test-b")
+    public String testB(){
+        testService.common();
+        return "test-b";
     }
 }
