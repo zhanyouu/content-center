@@ -1,18 +1,32 @@
 package com.itmuch.contentcenter;
 
+import com.alibaba.csp.sentinel.Entry;
+import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.Tracer;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.context.ContextUtil;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.itmuch.contentcenter.dao.content.ShareMapper;
 import com.itmuch.contentcenter.domain.entity.content.Share;
 import com.itmuch.contentcenter.feignclient.TestBaiduFeignClient;
+import com.itmuch.contentcenter.sentineltest.TestControllerBlockHandlerClass;
+import io.netty.util.internal.StringUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.Date;
 import java.util.List;
 
 @RestController
+@Slf4j
 public class TestController {
     @Autowired
     private ShareMapper shareMapper;
@@ -52,5 +66,67 @@ public class TestController {
     public String testB(){
         testService.common();
         return "test-b";
+    }
+    @GetMapping("/test-sentinel-api")
+    public String testSentinelAPI(@RequestParam(required = false) String a){
+        Entry entry = null;
+        String resourceName = "test-sentinel-api";
+        //可以实现调用来源，还可以标记调用
+        ContextUtil.enter(resourceName,"test-wfw");
+        try {
+            //定义资源，监控，保护api（最核心）
+            entry = SphU.entry(resourceName);
+
+            if(StringUtils.isBlank(a)){
+                throw new IllegalArgumentException("a内容不能为空");
+            }
+            return a;
+        }catch (BlockException e){
+            e.printStackTrace();
+            log.warn("限流或者降级了",e);
+            return "限流或者降级了";
+        }catch (IllegalArgumentException e){
+            //对我们异常进行统计
+            Tracer.trace(e);
+            return "参数非法";
+        }
+        finally {
+            if(entry!=null){
+                entry.exit();
+            }
+            ContextUtil.exit();
+        }
+    }
+    @GetMapping("/test-sentinel-resource")
+    @SentinelResource(value = "test-sentinel-api",
+            blockHandler = "block",
+            blockHandlerClass = TestControllerBlockHandlerClass.class,
+            fallback = "fallback")
+    public String testSentinelResource(@RequestParam(required = false) String a) {
+        if (StringUtils.isBlank(a)) {
+            throw new IllegalArgumentException("a can not null");
+        }
+        return a;
+    }
+
+    /**'
+     * 处理限流或者降级
+     * @param a
+     * @param e
+     * @return
+     */
+    public String block(String a,BlockException e){
+        log.warn("限流或者降级了,block",e);
+        return "限流或者降级了,block";
+    }
+
+    /**
+     * 处理降级，sentinel1.6可以throwable
+     * @param a
+     * @return
+     */
+    public String fallback(String a){
+        log.warn("限流或者降级了,fallback");
+        return "限流或者降级了,fallback";
     }
 }

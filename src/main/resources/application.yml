@@ -17,6 +17,8 @@ spring:
     sentinel:
       transport:
         dashboard: localhost:8080
+      filter:
+        enabled: false
   application:
     name: content-center
 server:
