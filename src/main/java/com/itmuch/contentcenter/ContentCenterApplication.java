@@ -3,6 +3,7 @@ package com.itmuch.contentcenter;
 import com.itmuch.contentcenter.configuration.GlobalFeignConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.alibaba.sentinel.annotation.SentinelRestTemplate;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,8 @@ public class ContentCenterApplication {
 
 	@Bean
 	@LoadBalanced
+	//可以配置异常处理，类似sentinelResource
+	@SentinelRestTemplate
 	public RestTemplate restTemplate(){
 		RestTemplate restTemplate = new RestTemplate();
 		return restTemplate;
