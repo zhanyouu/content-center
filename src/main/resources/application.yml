@@ -36,6 +36,9 @@ logging:
     com.itmuch.contentcenter.feignclient.UserCenterFeignClient: debug
 #细粒度配置和全局配置只用把服务名称改为default
 feign:
+  #为feign配置sentinel
+  sentinel:
+    enable: true
   client:
     config:
       #想要调用微服务的名称
@@ -49,3 +52,7 @@ feign:
     max-connections: 200
     #feign单个路径的最大连接数
     max-connections-per-route: 50
+#为resttemplate整合sentinel
+resttemplate:
+  sentinel:
+    enabled: false

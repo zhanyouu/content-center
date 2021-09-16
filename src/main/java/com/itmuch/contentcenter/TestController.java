@@ -7,6 +7,7 @@ import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.context.ContextUtil;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.itmuch.contentcenter.dao.content.ShareMapper;
+import com.itmuch.contentcenter.domain.dto.user.UserDTO;
 import com.itmuch.contentcenter.domain.entity.content.Share;
 import com.itmuch.contentcenter.feignclient.TestBaiduFeignClient;
 import com.itmuch.contentcenter.sentineltest.TestControllerBlockHandlerClass;
@@ -16,10 +17,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.swing.text.html.parser.Entity;
 import java.util.Date;
@@ -128,5 +127,12 @@ public class TestController {
     public String fallback(String a){
         log.warn("限流或者降级了,fallback");
         return "限流或者降级了,fallback";
+    }
+    @Autowired
+    private RestTemplate restTemplate;
+    @GetMapping("/restSentinelTest")
+    public UserDTO test(@PathVariable Integer userId){
+
+        return restTemplate.getForObject("http://user-center/users/{userId}",UserDTO.class,userId);
     }
 }
