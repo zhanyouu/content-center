@@ -7,6 +7,8 @@ spring:
       # >= 6.x: com.mysql.cj.jdbc.Driver
       # <= 5.x: com.mysql.jdbc.Driver
       driver-class-name: com.mysql.cj.jdbc.Driver
+  application:
+    name: content-center
   cloud:
     nacos:
       discovery:
@@ -19,8 +21,6 @@ spring:
         dashboard: localhost:8080
       filter:
         enabled: false
-  application:
-    name: content-center
 server:
   port: 8010
 #user-center:
@@ -56,3 +56,8 @@ feign:
 resttemplate:
   sentinel:
     enabled: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
