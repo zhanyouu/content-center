@@ -11,8 +11,8 @@ import tk.mybatis.spring.annotation.MapperScan;
 @SpringBootTest
 class UserCenterApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }

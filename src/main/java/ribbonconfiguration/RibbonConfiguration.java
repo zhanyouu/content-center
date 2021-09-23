@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RibbonConfiguration {
     @Bean
-    public IRule ribbonRule(){
+    public IRule ribbonRule() {
         return new RandomRule();
 //        return new NacosWeightedRule();
 //        return new NacosSameClusterWeightedRule();

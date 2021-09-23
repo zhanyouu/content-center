@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class GlobalFeignConfiguration {
     //配置feign输出的日志级别
     @Bean
-    public Logger.Level level(){
+    public Logger.Level level() {
         return Logger.Level.FULL;
     }
 }

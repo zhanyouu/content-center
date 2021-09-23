@@ -18,6 +18,7 @@ import org.springframework.cloud.alibaba.nacos.ribbon.NacosServer;
 public class NacosWeightedRule extends AbstractLoadBalancerRule {
     @Autowired
     private NacosDiscoveryProperties nacosDiscoveryProperties;
+
     @Override
     public void initWithNiwsConfig(IClientConfig iClientConfig) {
         //读取配置文件
@@ -33,9 +34,9 @@ public class NacosWeightedRule extends AbstractLoadBalancerRule {
             //拿到服务发现的相关API
             NamingService namingService = nacosDiscoveryProperties.namingServiceInstance();
             Instance instance = namingService.selectOneHealthyInstance(name);
-            log.info("选择的实例是：port = {},instance = {}",instance.getPort(),instance);
+            log.info("选择的实例是：port = {},instance = {}", instance.getPort(), instance);
             return new NacosServer(instance);
-        }catch (NacosException e){
+        } catch (NacosException e) {
             e.printStackTrace();
             return null;
         }

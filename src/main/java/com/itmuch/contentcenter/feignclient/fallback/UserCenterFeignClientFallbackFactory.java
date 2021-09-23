@@ -15,10 +15,11 @@ public class UserCenterFeignClientFallbackFactory implements FallbackFactory {
         return new UserCenterFeignClient() {
             @Override
             public UserDTO findById(Integer id) {
-                log.warn("降级或者限流了",throwable);
+                log.warn("降级或者限流了", throwable);
                 UserDTO userDTO = new UserDTO();
                 userDTO.setWxNickname("默认用户");
-                return userDTO;            }
+                return userDTO;
+            }
         };
     }
 }

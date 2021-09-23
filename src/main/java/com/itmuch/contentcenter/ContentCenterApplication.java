@@ -19,16 +19,16 @@ import tk.mybatis.spring.annotation.MapperScan;
 @EnableBinding({Source.class})
 public class ContentCenterApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ContentCenterApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ContentCenterApplication.class, args);
+    }
 
-	@Bean
-	@LoadBalanced
-	//可以配置异常处理，类似sentinelResource
-	@SentinelRestTemplate
-	public RestTemplate restTemplate(){
-		RestTemplate restTemplate = new RestTemplate();
-		return restTemplate;
-	}
+    @Bean
+    @LoadBalanced
+    //可以配置异常处理，类似sentinelResource
+    @SentinelRestTemplate
+    public RestTemplate restTemplate() {
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate;
+    }
 }

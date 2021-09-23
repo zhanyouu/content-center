@@ -31,8 +31,9 @@ public class TestController {
     private ShareMapper shareMapper;
     @Autowired
     private DiscoveryClient discoveryClient;
+
     @GetMapping("/test")
-    public List<Share> testInsert(){
+    public List<Share> testInsert() {
         Share share = new Share();
         share.setCreateTime(new Date());
         share.setUpdateTime(new Date());
@@ -42,60 +43,66 @@ public class TestController {
         List<Share> shareList = shareMapper.selectAll();
         return shareList;
     }
+
     @GetMapping("test2")
-    public List<ServiceInstance> getInstances(){
+    public List<ServiceInstance> getInstances() {
         //查询指定服务的所有实例信息
         List<ServiceInstance> serviceInstanceList = discoveryClient.getInstances("user-content");
         return serviceInstanceList;
     }
+
     @Autowired
     private TestBaiduFeignClient testBaiduFeignClient;
     @Autowired
     private TestService testService;
+
     @GetMapping("baidu")
-    public String baiduIndex(){
+    public String baiduIndex() {
         return testBaiduFeignClient.index();
     }
+
     @GetMapping("/test-a")
-    public String testA(){
+    public String testA() {
         testService.common();
         return "test-a";
     }
+
     @GetMapping("/test-b")
-    public String testB(){
+    public String testB() {
         testService.common();
         return "test-b";
     }
+
     @GetMapping("/test-sentinel-api")
-    public String testSentinelAPI(@RequestParam(required = false) String a){
+    public String testSentinelAPI(@RequestParam(required = false) String a) {
         Entry entry = null;
         String resourceName = "test-sentinel-api";
         //可以实现调用来源，还可以标记调用
-        ContextUtil.enter(resourceName,"test-wfw");
+        ContextUtil.enter(resourceName, "test-wfw");
         try {
             //定义资源，监控，保护api（最核心）
             entry = SphU.entry(resourceName);
 
-            if(StringUtils.isBlank(a)){
+            if (StringUtils.isBlank(a)) {
                 throw new IllegalArgumentException("a内容不能为空");
             }
             return a;
-        }catch (BlockException e){
+        } catch (BlockException e) {
             e.printStackTrace();
-            log.warn("限流或者降级了",e);
+            log.warn("限流或者降级了", e);
             return "限流或者降级了";
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             //对我们异常进行统计
             Tracer.trace(e);
             return "参数非法";
-        }
-        finally {
-            if(entry!=null){
+        } finally {
+            if (entry != null) {
                 entry.exit();
             }
             ContextUtil.exit();
         }
     }
+
     @GetMapping("/test-sentinel-resource")
     @SentinelResource(value = "test-sentinel-api",
             blockHandler = "block",
@@ -108,31 +115,36 @@ public class TestController {
         return a;
     }
 
-    /**'
+    /**
+     * '
      * 处理限流或者降级
+     *
      * @param a
      * @param e
      * @return
      */
-    public String block(String a,BlockException e){
-        log.warn("限流或者降级了,block",e);
+    public String block(String a, BlockException e) {
+        log.warn("限流或者降级了,block", e);
         return "限流或者降级了,block";
     }
 
     /**
      * 处理降级，sentinel1.6可以throwable
+     *
      * @param a
      * @return
      */
-    public String fallback(String a){
+    public String fallback(String a) {
         log.warn("限流或者降级了,fallback");
         return "限流或者降级了,fallback";
     }
+
     @Autowired
     private RestTemplate restTemplate;
-    @GetMapping("/restSentinelTest")
-    public UserDTO test(@PathVariable Integer userId){
 
-        return restTemplate.getForObject("http://user-center/users/{userId}",UserDTO.class,userId);
+    @GetMapping("/restSentinelTest")
+    public UserDTO test(@PathVariable Integer userId) {
+
+        return restTemplate.getForObject("http://user-center/users/{userId}", UserDTO.class, userId);
     }
 }

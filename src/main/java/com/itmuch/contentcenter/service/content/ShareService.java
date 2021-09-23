@@ -101,8 +101,7 @@ public class ShareService {
                                     .setHeader("dto", JSON.toJSONString(auditDTO))
                                     .build()
                     );
-        }
-        else {
+        } else {
             this.auditByIdInDB(id, auditDTO);
         }
         return share;

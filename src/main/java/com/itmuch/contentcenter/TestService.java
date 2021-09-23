@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class TestService {
     @SentinelResource("common")
-    public String common(){
+    public String common() {
         log.info("common----");
         return "common";
     }

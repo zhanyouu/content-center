@@ -74,7 +74,7 @@ public class Share {
     private String downloadUrl;
 
     /**
-     * 下载数 
+     * 下载数
      */
     @Column(name = "buy_count")
     private Integer buyCount;

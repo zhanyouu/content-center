@@ -12,10 +12,10 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 127.0.0.1:8849
+        server-addr: 127.0.0.1:8848
         cluster-name: BJ
-#        metadata:
-#          instance: a
+    #        metadata:
+    #          instance: a
     sentinel:
       filter:
         # 打开/关闭掉对Spring MVC端点的保护
@@ -58,8 +58,8 @@ feign:
   client:
     config:
       #想要调用微服务的名称
-#      user-center:
-       default:
+      #      user-center:
+      default:
         loggerLevel: full
   httpclient:
     #让feign使用apache httpclient做请求，而不是默认的urlconnection
