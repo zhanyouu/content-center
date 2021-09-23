@@ -1,4 +1,4 @@
-package rocketmq;
+package com.itmuch.contentcenter.rocketmq;
 
 import com.alibaba.fastjson.JSON;
 import com.itmuch.contentcenter.dao.messaging.RocketmqTransactionLogMapper;
@@ -31,7 +31,7 @@ public class AddBonusTransactionListener implements RocketMQLocalTransactionList
         ShareAuditDTO auditDTO = JSON.parseObject(dtoString, ShareAuditDTO.class);
 
         try {
-            this.shareService.auditByIdWithRocketMqLog(shareId, (ShareAuditDTO) arg, transactionId);
+            this.shareService.auditByIdWithRocketMqLog(shareId, auditDTO, transactionId);
             return RocketMQLocalTransactionState.COMMIT;
         } catch (Exception e) {
             return RocketMQLocalTransactionState.ROLLBACK;
@@ -45,9 +45,9 @@ public class AddBonusTransactionListener implements RocketMQLocalTransactionList
 
         // select * from xxx where transaction_id = xxx
         RocketmqTransactionLog transactionLog = this.rocketmqTransactionLogMapper.selectOne(
-            RocketmqTransactionLog.builder()
-                .transactionId(transactionId)
-                .build()
+                RocketmqTransactionLog.builder()
+                        .transactionId(transactionId)
+                        .build()
         );
         if (transactionLog != null) {
             return RocketMQLocalTransactionState.COMMIT;

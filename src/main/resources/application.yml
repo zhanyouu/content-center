@@ -23,8 +23,25 @@ spring:
       transport:
         # 指定sentinel 控制台的地址
         dashboard: localhost:8080
+    stream:
+      rocketmq:
+        binder:
+          name-server: 127.0.0.1:9876
+        bindings:
+          output:
+            producer:
+              transactional: true
+              group: tx-add-bonus-group
+      bindings:
+        output:
+          # 用来指定topic
+          destination: add-bonus
 server:
   port: 8010
+logging:
+  level:
+    com.itmuch.contentcenter.feignclient.UserCenterFeignClient: debug
+    com.alibaba.nacos: error
 #user-center:
 #  ribbon:
 #    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
@@ -33,9 +50,6 @@ ribbon:
   eager-load:
     clients: user-center
     enabled: true
-logging:
-  level:
-    com.itmuch.contentcenter.feignclient.UserCenterFeignClient: debug
 #细粒度配置和全局配置只用把服务名称改为default
 feign:
   #为feign配置sentinel
