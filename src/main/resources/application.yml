@@ -61,6 +61,8 @@ feign:
       #      user-center:
       default:
         loggerLevel: full
+        requestInterceptors:
+          - com.itmuch.contentcenter.feignclient.interceptor.TokenRelayRequestIntecepor
   httpclient:
     #让feign使用apache httpclient做请求，而不是默认的urlconnection
     enabled: true
