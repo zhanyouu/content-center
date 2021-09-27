@@ -15,6 +15,7 @@ import io.netty.util.internal.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
@@ -146,5 +147,11 @@ public class TestController {
     public UserDTO test(@PathVariable Integer userId) {
 
         return restTemplate.getForObject("http://user-center/users/{userId}", UserDTO.class, userId);
+    }
+    @Value("${your.configuration}")
+    private String yourConfiguration;
+    @GetMapping("/test-config")
+    public String testConfiguration(){
+        return this.yourConfiguration;
     }
 }
