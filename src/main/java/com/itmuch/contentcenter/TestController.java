@@ -154,4 +154,8 @@ public class TestController {
     public String testConfiguration(){
         return this.yourConfiguration;
     }
+    @GetMapping("/test-node-service")
+    public String testNodeService(){
+        return restTemplate.getForObject("http://wii",String.class);
+    }
 }
